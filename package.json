@@ -1,0 +1,16 @@
+{
+  "name": "@fuseio/erc20-subgraph",
+  "license": "MIT",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy fuseio/erc20-subgraph --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
+    "create-local": "graph create --node http://localhost:8020/ fuseio/erc20-subgraph",
+    "remove-local": "graph remove --node http://localhost:8020/ fuseio/erc20-subgraph",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 fuseio/erc20-subgraph"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "^0.51.2",
+    "@graphprotocol/graph-ts": "^0.31.0"
+  }
+}
