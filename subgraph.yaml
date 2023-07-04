@@ -2,7 +2,7 @@ specVersion: 0.0.5
 schema:
   file: ./schema.graphql
 dataSources:
-  - kind: ethereum
+  - kind: ethereum/contract
     name: ERC20
     network: fuse
     source:
@@ -22,4 +22,30 @@ dataSources:
       eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
-      file: ./src/erc-20.ts
+      file: ./src/mapping.ts
+  - kind: ethereum/contract
+    name: WETH9
+    network: fuse
+    source:
+      address: '0x0BE9e53fd7EDaC9F859882AfdDa116645287C629'
+      abi: WETH9
+      startBlock: 7216439
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Token
+        - Account
+        - TokenBalance
+      abis:
+        - name: WETH9
+          file: ./abis/WETH9.json
+      eventHandlers:
+        - event: Deposit(indexed address,uint256)
+          handler: handleDeposit
+        - event: Withdrawal(indexed address,uint256)
+          handler: handleWithdrawal
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+      file: ./src/mapping.ts
