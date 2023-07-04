@@ -39,6 +39,8 @@ dataSources:
         - Account
         - TokenBalance
       abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
         - name: WETH9
           file: ./abis/WETH9.json
       eventHandlers:

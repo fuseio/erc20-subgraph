@@ -62,67 +62,67 @@ export function handleTransfer(event: Transfer): void {
   }
 }
 
-export function handleDeposit(event: Withdrawal): void {
+export function handleDeposit(event: Deposit): void {
   let token = fetchTokenDetails(event);
   if (!token) { //if token == null
     return
   }
 
   // get account addresses from event
-  let toAddress = event.params.src.toHex();
+  let dstAddress = event.params.dst.toHex();
 
   // fetch account details
-  let toAccount = fetchAccount(toAddress);
+  let dstAccount = fetchAccount(dstAddress);
 
-  if (!toAccount) {
+  if (!dstAccount) {
     return;
   }
 
-  // setting the token balance of the 'to' account
-  let toTokenBalance = TokenBalance.load(token.id + "-" + toAccount.id);
-  if (!toTokenBalance) {
-    toTokenBalance = new TokenBalance(token.id + "-" + toAccount.id);
-    toTokenBalance.token = token.id;
-    toTokenBalance.account = toAccount.id;
+  // setting the token balance of the 'dst' account
+  let dstTokenBalance = TokenBalance.load(token.id + "-" + dstAccount.id);
+  if (!dstTokenBalance) {
+    dstTokenBalance = new TokenBalance(token.id + "-" + dstAccount.id);
+    dstTokenBalance.token = token.id;
+    dstTokenBalance.account = dstAccount.id;
   }
-  toTokenBalance.amount = fetchBalance(event.address, event.params.src)
-  if (toTokenBalance.amount != BigDecimal.fromString("0")) {
-    toTokenBalance.save();
+  dstTokenBalance.amount = fetchBalance(event.address, event.params.dst)
+  if (dstTokenBalance.amount != BigDecimal.fromString("0")) {
+    dstTokenBalance.save();
   }
 }
 
-export function handleWithdrawal(event: Deposit): void {
+export function handleWithdrawal(event: Withdrawal): void {
   let token = fetchTokenDetails(event);
   if (!token) { //if token == null
     return
   }
 
   // get account addresses from event
-  let fromAddress = event.params.dst.toHex();
+  let srcAddress = event.params.src.toHex();
 
   // fetch account details
-  let fromAccount = fetchAccount(fromAddress);
+  let srcAccount = fetchAccount(srcAddress);
 
-  if (!fromAccount) {
+  if (!srcAccount) {
     return;
   }
 
-  // setting the token balance of the 'from' account
-  let fromTokenBalance = TokenBalance.load(token.id + "-" + fromAccount.id);
-  if (!fromTokenBalance) { //if balance is not already saved
+  // setting the token balance of the 'src' account
+  let srcTokenBalance = TokenBalance.load(token.id + "-" + srcAccount.id);
+  if (!srcTokenBalance) { //if balance is not already saved
     // create a new TokenBalance instance
     // while creating the new token balance,
     // the combination of the token address 
     // and the account address is  
     // passed as the identifier value
-    fromTokenBalance = new TokenBalance(`${token.id}-${fromAccount.id}`);
-    fromTokenBalance.token = token.id;
-    fromTokenBalance.account = fromAccount.id;
+    srcTokenBalance = new TokenBalance(`${token.id}-${srcAccount.id}`);
+    srcTokenBalance.token = token.id;
+    srcTokenBalance.account = srcAccount.id;
   }
 
-  fromTokenBalance.amount = fetchBalance(event.address, event.params.dst)
+  srcTokenBalance.amount = fetchBalance(event.address, event.params.src)
   // filtering out zero-balance tokens - optional
-  if (fromTokenBalance.amount != BigDecimal.fromString("0")) {
-    fromTokenBalance.save();
+  if (srcTokenBalance.amount != BigDecimal.fromString("0")) {
+    srcTokenBalance.save();
   }
 }
